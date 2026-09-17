@@ -2,11 +2,6 @@
 
 **A Test-Time Memorization, Directed Belief Revision, and Multi-Scale Retrieval Architecture for Long-Horizon LLM Agents**
 
-[![Status](https://img.shields.io/badge/Status-Complete%20PoC-brightgreen.svg)]()
-[![Inference](https://img.shields.io/badge/Inference-100%25%20Local-blue.svg)]()
-[![Tests](https://img.shields.io/badge/Tests-33%2F33%20Passing-success.svg)]()
-[![License](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)]()
-
 ---
 
 ## Abstract
@@ -53,7 +48,9 @@ Long-running autonomous agents require persistent context over hundreds of inter
 
 HMR-CE was engineered specifically to overcome these structural pathologies through biologically motivated memory hierarchies and test-time gradient dynamics.
 
-![Conventional RAG Pathologies vs HMR-CE Architectural Resolutions](./assets/rag_pathologies.png)
+<p align="center">
+  <img src="assets/rag_pathologies.svg" alt="Conventional RAG Pathologies vs HMR-CE Architectural Resolutions" width="100%" />
+</p>
 
 ---
 
@@ -76,7 +73,9 @@ HMR-CE directly translates theoretical advancements from six foundational papers
 
 HMR-CE organizes memory across four distinct architectural tiers, completely decoupling the volatile attention horizon from persistent verbatim ground truth:
 
-![HMR-CE 4-Tier Memory Topology and Surprise Gating Architecture](./assets/memory_topology.png)
+<p align="center">
+  <img src="assets/memory_topology.svg" alt="HMR-CE 4-Tier Memory Topology and Surprise Gating Architecture" width="100%" />
+</p>
 
 1. **Tier 0 (Active Working Context Buffer)**:
    A thread-safe sliding ring buffer holding the most recent $K=6$ conversational turns verbatim. Serves as immediate attention context and the autoregressive conditioning history for token entropy computation.
@@ -162,7 +161,9 @@ When an incoming turn $x_t$ triggers `CONCEPTUAL_NOVELTY` or contains explicit s
 
 To balance sub-millisecond retrieval latency with verbatim precision, HMR-CE executes a three-phase coarse-to-fine funnel:
 
-![Hierarchical Coarse-to-Fine Traversal and Dynamic Verbatim Hydration Funnel](./assets/retrieval_funnel.png)
+<p align="center">
+  <img src="assets/retrieval_funnel.svg" alt="Hierarchical Coarse-to-Fine Traversal and Dynamic Verbatim Hydration Funnel" width="100%" />
+</p>
 
 ---
 
@@ -219,7 +220,9 @@ Recent breakthroughs in Universal Zero-Shot Embedding Inversion (*Zhang et al., 
 
 The project includes a real-time reactive telemetry cockpit built with FastAPI, WebSockets, Tailwind CSS, and Chart.js:
 
-![HMR-CE Live Telemetry Cockpit UI with Belief Invalidation DAG and Surprise Radar](./assets/hmr_ce_live_cockpit.png)
+<p align="center">
+  <img src="assets/hmr_ce_live_cockpit.png" alt="HMR-CE Live Telemetry Cockpit UI with Belief Invalidation DAG and Surprise Radar" width="100%" />
+</p>
 
 ### Hardware & Local Runtime
 * **OS**: Windows 11 / Linux
