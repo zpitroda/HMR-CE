@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HMR-CE: Context Engine with Surprise-Gated Memory</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Custom High-End Dark-Tech Styles -->
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body class="mode-intuitive bg-slate-950 text-slate-100 antialiased h-screen max-h-screen overflow-hidden flex flex-col font-sans select-none">
+  
+  <!-- ========================================================================= -->
+  <!-- HEADER NAVIGATION ISLAND                                                  -->
+  <!-- ========================================================================= -->
+  <header class="border-b border-slate-800/80 bg-slate-900/80 backdrop-blur-md px-5 py-2.5 flex items-center justify-between flex-shrink-0 z-40">
+    <!-- Brand / Logo -->
+    <div class="flex items-center space-x-3">
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-500 to-emerald-400 flex items-center justify-center font-extrabold text-slate-950 text-sm shadow-md shadow-cyan-500/20 ring-1 ring-white/20">
+        H
+      </div>
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-sm font-bold tracking-tight text-white flex items-center gap-1.5">
+            HMR-CE <span class="text-xs font-normal text-slate-400">Context Engine</span>
+          </h1>
+          <span class="text-[10px] px-2 py-0.5 rounded-full bg-cyan-950/80 border border-cyan-800 text-cyan-300 font-mono flex items-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            Titans + MRL
+          </span>
+        </div>
+        <p class="text-[10px] text-slate-400 hidden sm:block">Hierarchical Multi-Resolution Memory with Directed Belief Revision</p>
+      </div>
+    </div>
+
+    <!-- Center Telemetry Badges -->
+    <div class="hidden xl:flex items-center space-x-2.5 text-xs">
+      <div id="brain-state-badge" class="px-2.5 py-1 rounded-lg bg-emerald-950/70 border border-emerald-800/80 text-emerald-300 font-mono text-[11px] flex items-center gap-1.5 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>Brain: Calm (Routine)</span>
+      </div>
+      <div class="px-2.5 py-1 rounded-lg bg-slate-800/70 border border-slate-700/80 text-slate-300 font-mono text-[11px] flex items-center gap-1.5 shadow-sm" title="Local Qwen 3.8 27B model running on NVIDIA RTX 5090">
+        <span class="text-cyan-400 font-bold">GPU</span>
+        <span>RTX 5090 • Qwen 3.8 27B</span>
+      </div>
+      <div id="active-momentum-header" class="px-2.5 py-1 rounded-lg bg-amber-950/40 border border-amber-900/60 text-amber-300/90 font-mono text-[11px] shadow-sm">
+        Momentum α: 0.00
+      </div>
+    </div>
+
+    <!-- Actions Toolbar -->
+    <div class="flex items-center space-x-2">
+      <!-- Mode Toggle: Intuitive vs Telemetry -->
+      <div class="mode-toggle-group">
+        <button id="btn-mode-intuitive" onclick="setViewMode('intuitive')" class="mode-toggle-btn active" title="Simplified, human-readable explanations and analogies">
+          Intuitive
+        </button>
+        <button id="btn-mode-telemetry" onclick="setViewMode('telemetry')" class="mode-toggle-btn" title="Deep engineering telemetry, formulas, and raw vectors">
+          Telemetry
+        </button>
+      </div>
+
+      <!-- How It Works Guide Button -->
+      <button onclick="openExplainerModal()" class="btn-guide" title="Learn how Surprise Gating and Hierarchical Memory work">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <span>Guide</span>
+      </button>
+
+      <!-- Reset Session -->
+      <button onclick="resetMemory()" class="btn-reset" title="Wipe session memory and reset all tiers">
+        Reset
+      </button>
+    </div>
+  </header>
+
+  <!-- ========================================================================= -->
+  <!-- SCENARIOS PRESETS BAR                                                     -->
+  <!-- ========================================================================= -->
+  <section class="bg-slate-900/50 border-b border-slate-800/80 px-5 py-1.5 flex flex-wrap items-center justify-between gap-2 text-xs flex-shrink-0 z-30">
+    <div class="flex items-center gap-1.5 flex-wrap">
+      <span class="text-[10px] text-slate-400 font-mono uppercase tracking-wider flex items-center gap-1 mr-1">
+        <svg class="w-3.5 h-3.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Interactive Experiments:
+      </span>
+      <button onclick="runScenario('belief_invalidation')" class="btn-scenario" title="Watch AI learn an initial fact, then update and strike it through when told a contradiction">
+        <span class="badge-dot bg-rose-400"></span> 1. Belief Revision
+      </button>
+      <button onclick="runScenario('semantic_smearing')" class="btn-scenario" title="Protects high-level topic summaries from being distorted by unusual outlier facts">
+        <span class="badge-dot bg-amber-400"></span> 2. Surprise Isolation
+      </button>
+      <button onclick="runScenario('titans_momentum')" class="btn-scenario" title="High surprise opens an attention window so subsequent explanatory turns are also saved">
+        <span class="badge-dot bg-cyan-400"></span> 3. Titans Momentum
+      </button>
+      <button onclick="runScenario('temporal_inversion')" class="btn-scenario" title="Exponential decay gives recent facts higher priority without erasing old history">
+        <span class="badge-dot bg-indigo-400"></span> 4. Temporal Decay
+      </button>
+      <button onclick="runScenario('prefix_truncation')" class="btn-scenario" title="Fast d=64 coarse cluster scan, followed by deep d=1024 fine composite re-ranking">
+        <span class="badge-dot bg-emerald-400"></span> 5. 2-Stage Retrieval
+      </button>
+    </div>
+
+    <div class="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+      <span id="connection-status" class="flex items-center gap-1 text-emerald-400">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+        WS Live
+      </span>
+    </div>
+  </section>
+
+  <!-- ========================================================================= -->
+  <!-- MAIN COCKPIT GRID (3 COLUMNS)                                             -->
+  <!-- ========================================================================= -->
+  <main class="app-grid">
+    
+    <!-- ===================================================================== -->
+    <!-- COLUMN 1: Conversational Agent & Live Chat (Col 1-4)                 -->
+    <!-- ===================================================================== -->
+    <section class="col-panel-4 bezel-card h-full">
+      
+      <!-- Panel Header -->
+      <div class="bezel-header">
+        <div class="flex items-center gap-2">
+          <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 font-mono">
+              Conversational Agent (MAC)
+            </h2>
+            <p class="text-[10px] text-slate-400 font-sans">Memory-as-a-Context with Local Qwen 3.8</p>
+          </div>
+        </div>
+        <button onclick="clearChat()" class="text-[10px] text-slate-400 hover:text-slate-200 transition font-mono px-2 py-0.5 rounded bg-slate-800/80 border border-slate-700/60">
+          Clear Chat
+        </button>
+      </div>
+
+      <!-- Scenario Narration Banner -->
+      <div id="scenario-banner" class="hidden p-3 bg-gradient-to-r from-indigo-950/90 via-slate-900/90 to-cyan-950/90 border-b border-indigo-800/60 text-xs flex-shrink-0">
+        <div class="flex items-start justify-between gap-2">
+          <div class="flex-1">
+            <div class="flex items-center gap-2 mb-1">
+              <span class="px-1.5 py-0.2 rounded bg-indigo-500/20 text-indigo-300 font-mono font-bold text-[9px] border border-indigo-500/30">EXPERIMENT IN PROGRESS</span>
+              <span id="scenario-title" class="font-bold text-white text-xs">Belief Revision</span>
+            </div>
+            <p id="scenario-desc" class="text-slate-300 text-[11px] leading-relaxed">
+              We told the AI we use DNS TXT for queueing, then told it that failed and switched to Redis. Watch the old DNS fact get struck out!
+            </p>
+          </div>
+          <button onclick="dismissScenarioBanner()" class="text-slate-400 hover:text-white p-0.5 text-sm font-bold">&times;</button>
+        </div>
+      </div>
+
+      <!-- Chat Messages Scroll Container -->
+      <div id="chat-messages" class="flex-1 min-h-0 p-3 overflow-y-auto space-y-3 font-sans text-sm select-text">
+        <div class="system-bubble">
+          <div class="flex items-center gap-1.5 text-cyan-400 text-xs font-semibold font-mono mb-1">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+            <span>HMR-CE ONLINE • 100% LOCAL INFERENCE</span>
+          </div>
+          <p class="text-slate-300 text-xs leading-relaxed">
+            Welcome! This agent uses hierarchical multi-resolution memory. It gauges sentence surprise in real-time, remembers critical facts, and self-corrects beliefs when new contradictions arrive.
+          </p>
+        </div>
+      </div>
+
+      <!-- Quick-Try Experiment Prompts -->
+      <div class="px-3 pt-2 pb-1.5 bg-slate-900/90 border-t border-slate-800/80 flex-shrink-0">
+        <div class="text-[10px] text-slate-400 mb-1.5 font-mono flex items-center justify-between">
+          <span>💡 QUICK-TRY EXPERIMENTS:</span>
+        </div>
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="fillAndSend('The database host is db-primary.prod.internal at IP 10.0.4.12')" class="chip-prompt" title="Teaches the engine an initial premise">
+            1. "Database is at 10.0.4.12"
+          </button>
+          <button onclick="fillAndSend('We updated DNS. The database host is now db-new.prod.internal at IP 10.0.8.99')" class="chip-prompt text-amber-300 border-amber-800/60 hover:bg-amber-950/40" title="Updates the premise to trigger contradiction invalidation">
+            2. "Actually, database is 10.0.8.99"
+          </button>
+          <button onclick="fillAndSend('Where is the database hosted now? What is its IP?')" class="chip-prompt text-cyan-300 border-cyan-800/60 hover:bg-cyan-950/40" title="Queries memory to verify outdated fact is hidden and new IP is recalled">
+            3. "Where is the database now?"
+          </button>
+          <button onclick="fillAndSend('I love baking artisan sourdough pizza on weekends.')" class="chip-prompt text-emerald-300 border-emerald-800/60 hover:bg-emerald-950/40" title="Switches topic completely to test Q1 Topic Pivot">
+            4. "Switch topic to sourdough pizza"
+          </button>
+        </div>
+      </div>
+
+      <!-- Chat Input Controls -->
+      <div class="p-3 border-t border-slate-800/80 bg-slate-900/95 space-y-2 flex-shrink-0">
+        <div class="flex items-center justify-between text-[11px] text-slate-400 px-1">
+          <label class="flex items-center space-x-1.5 cursor-pointer select-none hover:text-slate-200 transition" title="Guarantees zero-hallucination by fetching verbatim text from the SQLite disk vault">
+            <input type="checkbox" id="force-verbatim" class="rounded bg-slate-800 border-slate-700 text-cyan-500 focus:ring-0">
+            <span>Force Verbatim Hydration</span>
+          </label>
+          <label class="flex items-center space-x-1.5 cursor-pointer select-none hover:text-slate-200 transition" title="Audits past retracted/superseded beliefs that are normally concealed">
+            <input type="checkbox" id="retro-mode" class="rounded bg-slate-800 border-slate-700 text-indigo-500 focus:ring-0">
+            <span>Retrospective Audit</span>
+          </label>
+        </div>
+
+        <form id="chat-form" class="flex gap-2">
+          <input 
+            type="text" 
+            id="chat-input" 
+            placeholder="Type a new premise, an update, or a question..." 
+            class="flex-1 bg-slate-950/90 border border-slate-700/80 rounded-xl px-3.5 py-2 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500/30 transition shadow-inner font-sans"
+            autocomplete="off"
+          >
+          <button type="submit" id="btn-send" class="btn-primary px-3.5 py-2 text-xs">
+            <span>Send</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </form>
+      </div>
+
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- COLUMN 2: 2D Surprise Phase Plane & Memory Topology (Col 5-8)         -->
+    <!-- ===================================================================== -->
+    <section class="col-panel-4 flex flex-col gap-3.5 h-full overflow-hidden">
+      
+      <!-- Top: 2D Surprise Phase Plane -->
+      <div class="bezel-card h-64 flex-shrink-0">
+        <div class="bezel-header">
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 font-mono flex items-center gap-1.5">
+              <span>Surprise Radar (Phase Plane)</span>
+            </h2>
+            <p class="text-[10px] text-slate-400 intuitive-only">User input saliency radar mapping prompt drift vs perplexity</p>
+            <p class="text-[10px] text-slate-400 telemetry-only hidden font-mono">2D Phase Plane: User Input Drift S_topic vs. Perplexity P_entropy</p>
+          </div>
+          <span id="active-momentum-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400">
+            Window α: 0.00
+          </span>
+        </div>
+
+        <div class="p-2.5 flex-1 min-h-0 flex flex-col">
+          <!-- Canvas Container -->
+          <div class="relative flex-1 min-h-0 w-full bg-slate-950/90 rounded-lg p-1.5 border border-slate-800/80 shadow-inner">
+            <canvas id="surpriseChart"></canvas>
+          </div>
+
+          <!-- Quadrant Legend -->
+          <div class="grid grid-cols-4 gap-1 mt-1.5 text-[9px] font-mono flex-shrink-0">
+            <div class="p-1 rounded bg-cyan-950/40 border border-cyan-900/60 text-cyan-300 flex items-center justify-between" title="Topic Pivot: S >= 0.50, P >= 40.0 (High Drift, High Perplexity)">
+              <span>Q1 Pivot</span>
+              <span class="text-cyan-400/80">Cluster</span>
+            </div>
+            <div class="p-1 rounded bg-amber-950/40 border border-amber-900/60 text-amber-300 flex items-center justify-between" title="Conceptual Novelty: S < 0.50, P >= 40.0 (Low Drift, High Perplexity)">
+              <span>Q2 Novel!</span>
+              <span class="text-amber-400/80">α=1.0</span>
+            </div>
+            <div class="p-1 rounded bg-emerald-950/40 border border-emerald-900/60 text-emerald-300 flex items-center justify-between" title="Expected Progress: S < 0.50, P < 40.0 (Low Drift, Low Perplexity)">
+              <span>Q3 Flow</span>
+              <span class="text-emerald-400/80">Update</span>
+            </div>
+            <div class="p-1 rounded bg-slate-800/40 border border-slate-700/60 text-slate-300 flex items-center justify-between" title="Routine Interrupt: S >= 0.50, P < 40.0 (High Drift, Low Perplexity)">
+              <span>Q4 Chat</span>
+              <span class="text-slate-400/80">Buffer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom: Memory Topology Inspector -->
+      <div class="bezel-card flex-1 min-h-0 flex flex-col">
+        <div class="bezel-header">
+          <div class="flex space-x-1 font-mono text-xs" id="topology-tabs">
+            <button onclick="switchTab('tier0')" id="tab-tier0" class="tab-btn active" title="Active short-term conversation ring buffer">
+              <span class="intuitive-only">Short-Term (T0)</span>
+              <span class="telemetry-only hidden">Tier 0 (Buffer)</span>
+            </button>
+            <button onclick="switchTab('tier1')" id="tab-tier1" class="tab-btn" title="Permanent disk storage with exact verbatim text">
+              <span class="intuitive-only">Disk Vault (T1)</span>
+              <span class="telemetry-only hidden">Tier 1 (SQLite)</span>
+            </button>
+            <button onclick="switchTab('tier2')" id="tab-tier2" class="tab-btn" title="Conceptual memory nodes with belief statuses">
+              <span class="intuitive-only">Episodes (T2)</span>
+              <span class="telemetry-only hidden">Tier 2 (Episodic)</span>
+            </button>
+            <button onclick="switchTab('tier3')" id="tab-tier3" class="tab-btn" title="Big-picture topic cluster summaries">
+              <span class="intuitive-only">Topics (T3)</span>
+              <span class="telemetry-only hidden">Tier 3 (Centroids)</span>
+            </button>
+          </div>
+          <span id="tier-counter" class="text-[10px] font-mono text-slate-400 bg-slate-800/80 px-2 py-0.5 rounded-full border border-slate-700/60">
+            0 items
+          </span>
+        </div>
+
+        <div class="px-3 pt-2 pb-1 border-b border-slate-800/50 flex-shrink-0">
+          <p class="text-[10px] text-slate-400 intuitive-only">
+            Click any memory item below to inspect its verbatim text, belief status, and math!
+          </p>
+          <p class="text-[10px] text-slate-400 telemetry-only hidden font-mono">
+            4-Tier Storage Topology: Ring Buffer (K=6), SQLite WAL, Fine Vector Store (d=1024), Coarse Centroids (d=64)
+          </p>
+        </div>
+
+        <div id="tab-content" class="flex-1 min-h-0 overflow-y-auto p-3 space-y-2 text-xs font-mono select-text">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- COLUMN 3: Directed Belief DAG & 3-Phase Traversal (Col 9-12)           -->
+    <!-- ===================================================================== -->
+    <section class="col-panel-4 flex flex-col gap-3.5 h-full overflow-hidden">
+      
+      <!-- Top: Directed Belief Revision DAG -->
+      <div class="bezel-card h-64 flex-shrink-0">
+        <div class="bezel-header">
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 font-mono flex items-center gap-1.5">
+              <span>Belief Revision Graph</span>
+              <span class="text-[10px] text-rose-400 font-normal intuitive-only">(Self-Correction)</span>
+              <span class="text-[10px] text-rose-400 font-normal telemetry-only hidden">(Directed DAG)</span>
+            </h2>
+            <p class="text-[10px] text-slate-400 intuitive-only">Outdated facts are struck out when contradicted</p>
+            <p class="text-[10px] text-slate-400 telemetry-only hidden font-mono">DAG nodes marked SUPERSEDED via NLI contradiction links</p>
+          </div>
+          <span id="invalidations-count" class="text-[10px] font-mono px-2 py-0.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-400">
+            0 Corrections
+          </span>
+        </div>
+
+        <!-- Legend -->
+        <div class="flex items-center justify-between bg-slate-950/80 px-3 py-1 text-[10px] font-mono border-b border-slate-800/80 flex-shrink-0">
+          <div class="flex items-center gap-1.5 text-emerald-400">
+            <span class="w-2 h-2 rounded bg-emerald-500/30 border border-emerald-400"></span>
+            <span>Active Truth</span>
+          </div>
+          <div class="flex items-center gap-1.5 text-rose-400">
+            <span class="w-2 h-2 rounded bg-rose-500/20 border border-rose-500 line-through"></span>
+            <span>Struck Out</span>
+          </div>
+          <div class="flex items-center gap-1 text-slate-400">
+            <span class="text-rose-500 font-bold">---></span>
+            <span>Replaced By</span>
+          </div>
+        </div>
+
+        <!-- DAG Canvas / SVG Container -->
+        <div id="dag-container" class="flex-1 min-h-0 w-full bg-slate-950/90 p-2 overflow-auto">
+          <svg id="dag-svg" class="w-full h-full min-h-[200px]"></svg>
+        </div>
+      </div>
+
+      <!-- Bottom: 3-Phase Traversal Funnel -->
+      <div class="bezel-card flex-1 min-h-0 flex flex-col">
+        <div class="bezel-header">
+          <div>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-slate-200 font-mono">
+              3-Phase Retrieval Funnel
+            </h2>
+            <p class="text-[10px] text-slate-400 intuitive-only">Microsecond memory search with 100% verbatim precision</p>
+            <p class="text-[10px] text-slate-400 telemetry-only hidden font-mono">Coarse MRL (d=64) -> Fine Re-rank (d=1024) -> Verbatim Hydration</p>
+          </div>
+          <span id="hydration-badge" class="text-[10px] font-mono px-2 py-0.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700">
+            Ready
+          </span>
+        </div>
+
+        <div id="traversal-trace" class="flex-1 min-h-0 overflow-y-auto p-3 space-y-2 text-xs font-mono text-slate-300 select-text">
+          <div class="p-3 rounded-xl bg-slate-950/60 border border-slate-800/60 text-center text-slate-400">
+            <svg class="w-6 h-6 mx-auto mb-1 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <p class="text-xs font-semibold text-slate-300 mb-1">Awaiting Memory Search</p>
+            <p class="text-[11px]">Type a question in the chat or run an experiment to see the 3-phase memory search in real-time!</p>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ========================================================================= -->
+  <!-- "HOW IT WORKS" EXPLAINER MODAL                                            -->
+  <!-- ========================================================================= -->
+  <div id="explainer-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-3xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center text-cyan-400 font-bold">
+            💡
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-white">How HMR-CE Works (Plain-English Guide)</h3>
+            <p class="text-[11px] text-slate-400">Hierarchical Multi-Resolution Context Engine with Surprise-Gated Memory</p>
+          </div>
+        </div>
+        <button onclick="closeExplainerModal()" class="text-slate-400 hover:text-white text-xl font-bold p-1">&times;</button>
+      </div>
+
+      <div class="p-5 overflow-y-auto space-y-4 text-xs text-slate-300 leading-relaxed select-text">
+        <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+          <h4 class="font-bold text-cyan-400 mb-1 text-xs flex items-center gap-2">
+            <span>1. The Problem with Standard AI Memory</span>
+          </h4>
+          <p class="text-[11px] text-slate-300 mb-2">
+            Standard AI models suffer from two big flaws:
+          </p>
+          <ul class="text-[11px] list-disc list-inside space-y-1 text-slate-400">
+            <li><strong class="text-slate-200">They drown in chit-chat:</strong> Saving every mundane sentence clutters context and slows down thinking.</li>
+            <li><strong class="text-slate-200">They hallucinate outdated facts:</strong> If you say <em>"The meeting is at 2 PM"</em> and later say <em>"Actually, it's at 4 PM"</em>, normal vector databases retrieve <em>both</em> times and the AI gets confused!</li>
+          </ul>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+          <h4 class="font-bold text-amber-400 mb-1 text-xs flex items-center gap-2">
+            <span>2. Dual-Signal Surprise Radar (The Gatekeeper)</span>
+          </h4>
+          <p class="text-[11px] text-slate-300 mb-2">
+            Just like your brain tunes out a ticking clock but snaps alert when someone drops a glass, HMR-CE measures two signals for every single sentence:
+          </p>
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+              <strong class="text-cyan-300 font-mono">Topic Drift (S_topic)</strong>
+              <p class="text-slate-400 text-[10px] mt-0.5">Measures how far the subject has strayed from the current conversation topic.</p>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+              <strong class="text-amber-300 font-mono">Perplexity / Surprise (P_entropy)</strong>
+              <p class="text-slate-400 text-[10px] mt-0.5">Measures how unexpected or unusual the factual information is.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+          <h4 class="font-bold text-emerald-400 mb-1 text-xs flex items-center gap-2">
+            <span>3. The 4 Memory Tiers</span>
+          </h4>
+          <div class="grid grid-cols-2 gap-2 text-[11px] mt-1">
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+              <strong class="text-slate-200">Tier 0: Active Buffer (K=6)</strong>
+              <p class="text-slate-400 text-[10px]">Short-term working memory for active banter.</p>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+              <strong class="text-cyan-300">Tier 1: Disk Vault (SQLite)</strong>
+              <p class="text-slate-400 text-[10px]">Permanent verbatim diary for exact numbers, code, and passwords.</p>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+              <strong class="text-indigo-300">Tier 2: Episodic Nodes (d=1024)</strong>
+              <p class="text-slate-400 text-[10px]">Deep conceptual memories tracking active vs. retracted beliefs.</p>
+            </div>
+            <div class="p-2 rounded-lg bg-slate-900 border border-slate-800">
+              <strong class="text-emerald-300">Tier 3: Topic Centroids (d=64)</strong>
+              <p class="text-slate-400 text-[10px]">Macro summaries allowing the AI to scan years of memory in microseconds.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-slate-950/80 border border-slate-800">
+          <h4 class="font-bold text-rose-400 mb-1 text-xs flex items-center gap-2">
+            <span>4. Self-Correcting Mind (Directed Belief Revision)</span>
+          </h4>
+          <p class="text-[11px] text-slate-300 leading-relaxed">
+            When you correct the AI (e.g. <em>"Actually, our server IP is 10.0.8.99, not 10.0.4.12"</em>), HMR-CE automatically marks the old fact as <strong class="text-rose-400 font-mono">SUPERSEDED</strong> with a red strikethrough, draws an arrow to the new truth, and conceals the outdated fact from future prompts!
+          </p>
+        </div>
+      </div>
+
+      <div class="p-3 border-t border-slate-800 bg-slate-900/90 flex justify-end">
+        <button onclick="closeExplainerModal()" class="btn-primary px-4 py-1.5 text-xs">
+          Got It! Back to Dashboard
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================= -->
+  <!-- CLICK-TO-INSPECT DETAIL DRAWER                                            -->
+  <!-- ========================================================================= -->
+  <div id="inspector-modal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700/80 rounded-2xl max-w-xl w-full shadow-2xl overflow-hidden flex flex-col max-h-[85vh]">
+      <div class="p-4 border-b border-slate-800 flex items-center justify-between bg-slate-900/90">
+        <div class="flex items-center gap-2">
+          <span id="inspector-icon" class="text-lg">🔍</span>
+          <div>
+            <h3 id="inspector-title" class="text-xs font-bold text-white font-mono">Memory Node Inspector</h3>
+            <p id="inspector-subtitle" class="text-[10px] text-slate-400 font-sans">Verbatim Content & Belief Telemetry</p>
+          </div>
+        </div>
+        <button onclick="closeInspectorModal()" class="text-slate-400 hover:text-white text-xl font-bold p-1">&times;</button>
+      </div>
+
+      <div class="p-4 overflow-y-auto space-y-3 text-xs leading-relaxed select-text">
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-cyan-400 font-mono mb-1">Human Explanation</p>
+          <p id="inspector-human-expl" class="text-slate-200 text-[11px] leading-relaxed">
+            <!-- Populated dynamically -->
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono mb-1">Verbatim Content (From Tier 1 Vault)</p>
+          <p id="inspector-full-text" class="text-slate-100 font-mono text-[11px] whitespace-pre-wrap bg-slate-900 p-2.5 rounded-lg border border-slate-800 leading-relaxed">
+            <!-- Populated dynamically -->
+          </p>
+        </div>
+
+        <div class="p-3 rounded-xl bg-slate-950/80 border border-slate-800 space-y-2">
+          <p class="text-[10px] font-bold uppercase tracking-wider text-indigo-400 font-mono">Engine Telemetry</p>
+          <div class="grid grid-cols-2 gap-2 text-[10px] font-mono">
+            <div class="p-2 rounded bg-slate-900 border border-slate-800/80">
+              <span class="text-slate-500">Status:</span>
+              <span id="inspector-status" class="font-bold text-emerald-400 ml-1">VALID</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800/80">
+              <span class="text-slate-500">Surprise Salience:</span>
+              <span id="inspector-salience" class="font-bold text-amber-400 ml-1">α=1.00</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800/80">
+              <span class="text-slate-500">Cluster ID:</span>
+              <span id="inspector-cluster" class="font-bold text-cyan-400 ml-1">cluster_0</span>
+            </div>
+            <div class="p-2 rounded bg-slate-900 border border-slate-800/80">
+              <span class="text-slate-500">Superseded By:</span>
+              <span id="inspector-superseded-by" class="font-bold text-rose-400 ml-1">None</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="p-3 border-t border-slate-800 bg-slate-900/90 flex justify-end">
+        <button onclick="closeInspectorModal()" class="btn-primary px-4 py-1.5 text-xs">
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 520" width="100%" height="100%" style="background:#030712; border-radius:12px; font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <defs>
+    <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.02"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0b0f19" stop-opacity="0.9"/>
+    </linearGradient>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Outer Border -->
+  <rect x="1" y="1" width="958" height="518" rx="12" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Title Banner -->
+  <rect x="20" y="20" width="920" height="70" rx="8" fill="url(#headerGrad)" stroke="#1e293b" stroke-width="1"/>
+  
+  <rect x="36" y="34" width="154" height="20" rx="10" fill="#f43f5e" fill-opacity="0.12" stroke="#f43f5e" stroke-opacity="0.4" stroke-width="1"/>
+  <circle cx="46" cy="44" r="3.5" fill="#f43f5e"/>
+  <text x="56" y="47.5" fill="#fda4af" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace" letter-spacing="0.5">FAILURE MODE AUDIT</text>
+
+  <text x="36" y="73" fill="#f8fafc" font-size="16" font-weight="800" letter-spacing="-0.3">5 Canonical Pathologies of Conventional RAG &amp; HMR-CE Resolutions</text>
+  <text x="640" y="72" fill="#94a3b8" font-size="11" font-family="'JetBrains Mono', monospace">Titans • Miras • ZSinvert Grounding</text>
+
+  <!-- Table Header Columns -->
+  <rect x="20" y="100" width="920" height="30" rx="6" fill="#0f172a" stroke="#1e293b" stroke-width="1"/>
+  <text x="40" y="119" fill="#94a3b8" font-size="11" font-weight="700" font-family="'JetBrains Mono', monospace">#  PATHOLOGY</text>
+  <text x="240" y="119" fill="#f87171" font-size="11" font-weight="700" font-family="'JetBrains Mono', monospace">CONVENTIONAL MEMORY FAILURE</text>
+  <text x="590" y="119" fill="#34d399" font-size="11" font-weight="700" font-family="'JetBrains Mono', monospace">HMR-CE ARCHITECTURAL RESOLUTION</text>
+
+  <!-- Row 1: Semantic Smearing -->
+  <g transform="translate(20, 138)">
+    <rect width="920" height="66" rx="6" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1"/>
+    <rect x="12" y="14" width="200" height="38" rx="4" fill="#1e293b" fill-opacity="0.5"/>
+    <text x="22" y="32" fill="#38bdf8" font-size="12" font-weight="700">1. Semantic Smearing</text>
+    <text x="22" y="46" fill="#64748b" font-size="10" font-family="'JetBrains Mono', monospace">Topic Drift S_topic</text>
+    
+    <text x="240" y="31" fill="#cbd5e1" font-size="11.5">Recursive summarization averages rare, contrarian</text>
+    <text x="240" y="47" fill="#cbd5e1" font-size="11.5">outliers into bland, generic macro-summaries.</text>
+
+    <path d="M 560 33 L 575 33" stroke="#334155" stroke-width="1.5" stroke-dasharray="3,3"/>
+    
+    <rect x="590" y="14" width="316" height="38" rx="4" fill="#064e3b" fill-opacity="0.25" stroke="#059669" stroke-opacity="0.4" stroke-width="1"/>
+    <text x="602" y="31" fill="#34d399" font-size="11.5" font-weight="600">Surprise Isolation Gate (Quadrant 2)</text>
+    <text x="602" y="46" fill="#a7f3d0" font-size="10.5">Quarantines outlier turns from Tier 3 centroid mutation.</text>
+  </g>
+
+  <!-- Row 2: Temporal Inversion -->
+  <g transform="translate(20, 212)">
+    <rect width="920" height="66" rx="6" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1"/>
+    <rect x="12" y="14" width="200" height="38" rx="4" fill="#1e293b" fill-opacity="0.5"/>
+    <text x="22" y="32" fill="#818cf8" font-size="12" font-weight="700">2. Temporal Inversion</text>
+    <text x="22" y="46" fill="#64748b" font-size="10" font-family="'JetBrains Mono', monospace">Cosine Metric Symmetry</text>
+
+    <text x="240" y="31" fill="#cbd5e1" font-size="11.5">Time-agnostic cosine similarity ranks obsolete turns</text>
+    <text x="240" y="47" fill="#cbd5e1" font-size="11.5">above recent directives due to higher lexical overlap.</text>
+
+    <path d="M 560 33 L 575 33" stroke="#334155" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+    <rect x="590" y="14" width="316" height="38" rx="4" fill="#1e1b4b" fill-opacity="0.3" stroke="#6366f1" stroke-opacity="0.4" stroke-width="1"/>
+    <text x="602" y="31" fill="#a5b4fc" font-size="11.5" font-weight="600">Bounded Exponential Recency Decay</text>
+    <text x="602" y="46" fill="#c7d2fe" font-size="10.5">T(Δt) = λ_floor + (1 - λ_floor)·exp(-Δt / τ) prior weights.</text>
+  </g>
+
+  <!-- Row 3: Belief Obsolescence -->
+  <g transform="translate(20, 286)">
+    <rect width="920" height="66" rx="6" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1"/>
+    <rect x="12" y="14" width="200" height="38" rx="4" fill="#1e293b" fill-opacity="0.5"/>
+    <text x="22" y="32" fill="#f43f5e" font-size="12" font-weight="700">3. Belief Obsolescence</text>
+    <text x="22" y="46" fill="#64748b" font-size="10" font-family="'JetBrains Mono', monospace">Mutually Exclusive Facts</text>
+
+    <text x="240" y="31" fill="#cbd5e1" font-size="11.5">Contradicted statements remain active in vector index;</text>
+    <text x="240" y="47" fill="#cbd5e1" font-size="11.5">RAG retrieves both past and revised facts simultaneously.</text>
+
+    <path d="M 560 33 L 575 33" stroke="#334155" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+    <rect x="590" y="14" width="316" height="38" rx="4" fill="#881337" fill-opacity="0.25" stroke="#e11d48" stroke-opacity="0.4" stroke-width="1"/>
+    <text x="602" y="31" fill="#fda4af" font-size="11.5" font-weight="600">Directed Belief Invalidation DAG</text>
+    <text x="602" y="46" fill="#fecdd3" font-size="10.5">Local NLI marks stale nodes SUPERSEDED (masked from search).</text>
+  </g>
+
+  <!-- Row 4: Prefix Truncation Loss -->
+  <g transform="translate(20, 360)">
+    <rect width="920" height="66" rx="6" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1"/>
+    <rect x="12" y="14" width="200" height="38" rx="4" fill="#1e293b" fill-opacity="0.5"/>
+    <text x="22" y="32" fill="#fbbf24" font-size="12" font-weight="700">4. Prefix Truncation Loss</text>
+    <text x="22" y="46" fill="#64748b" font-size="10" font-family="'JetBrains Mono', monospace">MRL Subspace Distortion</text>
+
+    <text x="240" y="31" fill="#cbd5e1" font-size="11.5">Naive low-dim truncation across entire corpus destroys</text>
+    <text x="240" y="47" fill="#cbd5e1" font-size="11.5">fine-grained semantic boundaries and code tokens.</text>
+
+    <path d="M 560 33 L 575 33" stroke="#334155" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+    <rect x="590" y="14" width="316" height="38" rx="4" fill="#78350f" fill-opacity="0.25" stroke="#d97706" stroke-opacity="0.4" stroke-width="1"/>
+    <text x="602" y="31" fill="#fde68a" font-size="11.5" font-weight="600">Two-Stage Coarse-to-Fine Funnel</text>
+    <text x="602" y="46" fill="#fef3c7" font-size="10.5">Fast d=64 macro-sweep prunes clusters; full d=1024 re-ranks.</text>
+  </g>
+
+  <!-- Row 5: Lost Explanatory Context -->
+  <g transform="translate(20, 434)">
+    <rect width="920" height="66" rx="6" fill="url(#cardGrad)" stroke="#1e293b" stroke-width="1"/>
+    <rect x="12" y="14" width="200" height="38" rx="4" fill="#1e293b" fill-opacity="0.5"/>
+    <text x="22" y="32" fill="#34d399" font-size="12" font-weight="700">5. Lost Explanations</text>
+    <text x="22" y="46" fill="#64748b" font-size="10" font-family="'JetBrains Mono', monospace">Instantaneous Decay</text>
+
+    <text x="240" y="31" fill="#cbd5e1" font-size="11.5">Surprise trigger captures the initial shock utterance,</text>
+    <text x="240" y="47" fill="#cbd5e1" font-size="11.5">but lets subsequent clarifying rationales decay.</text>
+
+    <path d="M 560 33 L 575 33" stroke="#334155" stroke-width="1.5" stroke-dasharray="3,3"/>
+
+    <rect x="590" y="14" width="316" height="38" rx="4" fill="#064e3b" fill-opacity="0.25" stroke="#059669" stroke-opacity="0.4" stroke-width="1"/>
+    <text x="602" y="31" fill="#6ee7b7" font-size="11.5" font-weight="600">Titans Forward Momentum Window</text>
+    <text x="602" y="46" fill="#a7f3d0" font-size="10.5">α_{t+m} = α_t · γ^m shields explanatory wake across M turns.</text>
+  </g>
+</svg>

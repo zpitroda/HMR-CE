@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 700" width="100%" height="100%" style="background:#020617; border-radius:12px; font-family:'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <defs>
+    <linearGradient id="gateGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e1b4b" stop-opacity="0.9"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.9"/>
+    </linearGradient>
+    <linearGradient id="tierGrad0" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0f766e" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="tierGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0369a1" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="tierGrad2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#4338ca" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.7"/>
+    </linearGradient>
+    <linearGradient id="tierGrad3" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#b45309" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#0f172a" stop-opacity="0.7"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8"/>
+    </marker>
+    <marker id="arrowAmber" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#fbbf24"/>
+    </marker>
+    <marker id="arrowSlate" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#64748b"/>
+    </marker>
+    <marker id="arrowEmerald" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#34d399"/>
+    </marker>
+  </defs>
+
+  <!-- Border -->
+  <rect x="1" y="1" width="958" height="698" rx="12" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+
+  <!-- Top Utterance Card -->
+  <g transform="translate(280, 24)">
+    <rect width="400" height="48" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5"/>
+    <text x="200" y="24" text-anchor="middle" fill="#f8fafc" font-size="13" font-weight="700">INCOMING USER UTTERANCE (x_t)</text>
+    <text x="200" y="38" text-anchor="middle" fill="#94a3b8" font-size="10.5" font-family="'JetBrains Mono', monospace">e_t = MRL_1024(x_t) • Context-Conditioned</text>
+  </g>
+
+  <!-- Flow to Surprise Gate -->
+  <line x1="480" y1="72" x2="480" y2="98" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- Surprise Gate Box -->
+  <g transform="translate(200, 102)">
+    <rect width="560" height="78" rx="10" fill="url(#gateGrad)" stroke="#6366f1" stroke-width="1.5"/>
+    <text x="280" y="28" text-anchor="middle" fill="#f8fafc" font-size="14" font-weight="800">DUAL-SIGNAL SURPRISE GATE &amp; DISCOURSE ANAPHORA</text>
+    <text x="280" y="48" text-anchor="middle" fill="#94a3b8" font-size="11.5">
+      Topical Semantic Drift <tspan fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-weight="700">S_topic</tspan> (θ=0.50)  +  Token Perplexity <tspan fill="#f59e0b" font-family="'JetBrains Mono', monospace" font-weight="700">P_entropy</tspan> (θ=40.0)
+    </text>
+    <text x="280" y="66" text-anchor="middle" fill="#a5b4fc" font-size="10" font-family="'JetBrains Mono', monospace">
+      cos_eff = max(cos(e_t, C_{t-1}), cos(e_t, e_{t-1})) • Titans Momentum
+    </text>
+  </g>
+
+  <!-- Connectors to 4 Quadrants -->
+  <path d="M 310 174 L 140 216" stroke="#06b6d4" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 420 174 L 370 216" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrowAmber)"/>
+  <path d="M 540 174 L 590 216" stroke="#10b981" stroke-width="1.5" marker-end="url(#arrowEmerald)"/>
+  <path d="M 650 174 L 820 216" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrowSlate)"/>
+
+  <!-- Quadrant 1 Card -->
+  <g transform="translate(40, 220)">
+    <rect width="200" height="86" rx="8" fill="#082f49" fill-opacity="0.6" stroke="#0284c7" stroke-width="1.2"/>
+    <text x="14" y="22" fill="#38bdf8" font-size="12" font-weight="700">Q1: Topic Pivot</text>
+    <text x="14" y="38" fill="#7dd3fc" font-size="10" font-family="'JetBrains Mono', monospace">S &gt; 0.50 • P &gt; 40.0</text>
+    <text x="14" y="55" fill="#e0f2fe" font-size="10.5">• Finalize prior cluster</text>
+    <text x="14" y="70" fill="#e0f2fe" font-size="10.5">• Spawn Cluster K+1; α=0.8</text>
+  </g>
+
+  <!-- Quadrant 2 Card -->
+  <g transform="translate(260, 220)">
+    <rect width="210" height="86" rx="8" fill="#451a03" fill-opacity="0.6" stroke="#d97706" stroke-width="1.5"/>
+    <text x="14" y="22" fill="#fbbf24" font-size="12" font-weight="700">Q2: Conceptual Novelty</text>
+    <text x="14" y="38" fill="#fde68a" font-size="10" font-family="'JetBrains Mono', monospace">S ≤ 0.50 • P &gt; 40.0</text>
+    <text x="14" y="55" fill="#fef3c7" font-size="10.5">• Max Salience α=1.00</text>
+    <text x="14" y="70" fill="#fef3c7" font-size="10.5">• Titans Horizon + NLI DAG</text>
+  </g>
+
+  <!-- Quadrant 3 Card -->
+  <g transform="translate(490, 220)">
+    <rect width="200" height="86" rx="8" fill="#064e3b" fill-opacity="0.5" stroke="#059669" stroke-width="1.2"/>
+    <text x="14" y="22" fill="#34d399" font-size="12" font-weight="700">Q3: Expected Progress</text>
+    <text x="14" y="38" fill="#a7f3d0" font-size="10" font-family="'JetBrains Mono', monospace">S ≤ 0.50 • P ≤ 40.0</text>
+    <text x="14" y="55" fill="#d1fae5" font-size="10.5">• Salience α=max(0.2, η)</text>
+    <text x="14" y="70" fill="#d1fae5" font-size="10.5">• Update running centroid</text>
+  </g>
+
+  <!-- Quadrant 4 Card -->
+  <g transform="translate(710, 220)">
+    <rect width="210" height="86" rx="8" fill="#1e293b" fill-opacity="0.6" stroke="#475569" stroke-width="1.2"/>
+    <text x="14" y="22" fill="#94a3b8" font-size="12" font-weight="700">Q4: Routine Interruption</text>
+    <text x="14" y="38" fill="#cbd5e1" font-size="10" font-family="'JetBrains Mono', monospace">S &gt; 0.50 • P ≤ 40.0</text>
+    <text x="14" y="55" fill="#e2e8f0" font-size="10.5">• Miras Attentional Coping</text>
+    <text x="14" y="70" fill="#e2e8f0" font-size="10.5">• Buffer T0 only (Zero DAG/C_t)</text>
+  </g>
+
+  <!-- Connectors into Tiers -->
+  <path d="M 365 306 L 365 336 L 480 336 L 480 348" stroke="#f59e0b" stroke-width="1.5" marker-end="url(#arrowAmber)"/>
+  <path d="M 140 306 L 140 336 L 480 336" stroke="#06b6d4" stroke-width="1.5"/>
+  <path d="M 590 306 L 590 336 L 480 336" stroke="#10b981" stroke-width="1.5"/>
+
+  <!-- ==================== 4 MEMORY TIERS CONTAINER ==================== -->
+  <g transform="translate(40, 354)">
+    
+    <!-- Tier 0 -->
+    <g transform="translate(0, 0)">
+      <rect width="880" height="68" rx="8" fill="url(#tierGrad0)" stroke="#0d9488" stroke-width="1.2"/>
+      <rect x="14" y="12" width="60" height="20" rx="4" fill="#134e4a" stroke="#14b8a6" stroke-width="0.8"/>
+      <text x="44" y="26" text-anchor="middle" fill="#5eead4" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">TIER 0</text>
+      
+      <text x="86" y="27" fill="#f8fafc" font-size="13" font-weight="700">Active Working Context Buffer (Sliding Ring Buffer, K=6)</text>
+      <text x="86" y="47" fill="#99f6e4" font-size="11">Holds recent conversational turns verbatim. Serves as immediate attention window and autoregressive conditioning prior.</text>
+      <text x="760" y="27" fill="#2dd4bf" font-size="10.5" font-family="'JetBrains Mono', monospace">Volatile RAM</text>
+    </g>
+
+    <!-- Tier 1 -->
+    <g transform="translate(0, 78)">
+      <rect width="880" height="68" rx="8" fill="url(#tierGrad1)" stroke="#0284c7" stroke-width="1.2"/>
+      <rect x="14" y="12" width="60" height="20" rx="4" fill="#0c4a6e" stroke="#38bdf8" stroke-width="0.8"/>
+      <text x="44" y="26" text-anchor="middle" fill="#7dd3fc" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">TIER 1</text>
+      
+      <text x="86" y="27" fill="#f8fafc" font-size="13" font-weight="700">Ground-Truth Pointer Store (Append-Only SQLite WAL Vault)</text>
+      <text x="86" y="47" fill="#bae6fd" font-size="11">Immutable verbatim storage indexed monotonically by turn_id. Decouples literal truth from lossy embedding inversion (ZSinvert).</text>
+      <text x="740" y="27" fill="#38bdf8" font-size="10.5" font-family="'JetBrains Mono', monospace">100% Verbatim</text>
+    </g>
+
+    <!-- Tier 2 -->
+    <g transform="translate(0, 156)">
+      <rect width="880" height="82" rx="8" fill="url(#tierGrad2)" stroke="#6366f1" stroke-width="1.2"/>
+      <rect x="14" y="12" width="60" height="20" rx="4" fill="#312e81" stroke="#818cf8" stroke-width="0.8"/>
+      <text x="44" y="26" text-anchor="middle" fill="#c7d2fe" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">TIER 2</text>
+      
+      <text x="86" y="27" fill="#f8fafc" font-size="13" font-weight="700">Episodic Memory Store &amp; Directed Belief DAG (MRL d=1024)</text>
+      <text x="86" y="47" fill="#c7d2fe" font-size="11">Fine episodic vectors, test-time salience α_t, and directed supersession edges (<tspan fill="#f43f5e" font-family="'JetBrains Mono', monospace">ACTIVE</tspan> → <tspan fill="#94a3b8" font-family="'JetBrains Mono', monospace">SUPERSEDED</tspan>).</text>
+      <text x="86" y="66" fill="#a5b4fc" font-size="10.5">Masked from standard query execution; traversed during retrospective queries to audit decision evolution.</text>
+      <text x="740" y="27" fill="#a5b4fc" font-size="10.5" font-family="'JetBrains Mono', monospace">Directed DAG</text>
+    </g>
+
+    <!-- Tier 3 -->
+    <g transform="translate(0, 248)">
+      <rect width="880" height="74" rx="8" fill="url(#tierGrad3)" stroke="#d97706" stroke-width="1.2"/>
+      <rect x="14" y="12" width="60" height="20" rx="4" fill="#78350f" stroke="#fbbf24" stroke-width="0.8"/>
+      <text x="44" y="26" text-anchor="middle" fill="#fde68a" font-size="10" font-weight="700" font-family="'JetBrains Mono', monospace">TIER 3</text>
+      
+      <text x="86" y="27" fill="#f8fafc" font-size="13" font-weight="700">Topological Macro-Centroid Map (Coarse MRL d=64 Prefix)</text>
+      <text x="86" y="47" fill="#fef3c7" font-size="11">Maintains coarse cluster centroids for O(1) candidate cluster pruning in Phase 1 retrieval funnel.</text>
+      <text x="86" y="63" fill="#fde68a" font-size="10.5">Enforces <tspan font-weight="700" fill="#f59e0b">Surprise Isolation</tspan>: Quadrant 2 contrarian premises are quarantined from centroid aggregation.</text>
+      <text x="720" y="27" fill="#fbbf24" font-size="10.5" font-family="'JetBrains Mono', monospace">Surprise Isolated</text>
+    </g>
+
+  </g>
+</svg>
